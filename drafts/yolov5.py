@@ -1,12 +1,11 @@
 import cv2
-from ultralytics import YOLO
+import torch
 
-# Load the YOLOv8 model
-model = YOLO("yolov8n.pt")
+# Model
+model = torch.hub.load("ultralytics/yolov5", "yolov5n")  # or yolov5n - yolov5x6, custom
 
-# Open the video file
-video_path = "./pedestrians.mp4"
-cap = cv2.VideoCapture(video_path)
+# video_path = "./pedestrians.mp4"
+cap = cv2.VideoCapture("/dev/video2")
 
 # Loop through the video frames
 while cap.isOpened():
@@ -15,14 +14,13 @@ while cap.isOpened():
 
     if success:
         # Run YOLOv8 inference on the frame
-        new_shape = (frame.shape[1] >> 1, frame.shape[0] >> 1)
-        results = model(cv2.resize(frame, new_shape))
+        results = model(frame)
 
         # Visualize the results on the frame
-        annotated_frame = results[0].plot()
+        annotated_frame = results.render()[0]
 
         # Display the annotated frame
-        cv2.imshow("YOLOv8 Inference", annotated_frame)
+        cv2.imshow("YOLOv5 Inference", annotated_frame)
 
         # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord("q"):
