@@ -1,2 +1,2 @@
-def app():
+def run():
     print("test")
