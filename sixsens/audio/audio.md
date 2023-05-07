@@ -37,8 +37,9 @@ Distances
     immobile
     lente
     en excès de vitesse
+```
 
-
+```
 <speak>
 <emphasis level="moderate">Champ de vision obstrué.</emphasis>
 <break time="1000ms"/>
@@ -77,7 +78,9 @@ Chaise...
 Table...
 
 </speak>
+```
 
+```
 <speak>
 ...très proche.
 <break time="1000ms"/>

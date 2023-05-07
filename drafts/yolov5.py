@@ -2,10 +2,12 @@ import cv2
 import torch
 
 # Model
-model = torch.hub.load("ultralytics/yolov5", "yolov5n")  # or yolov5n - yolov5x6, custom
+model = torch.hub.load(
+    "ultralytics/yolov5", "yolov5n"
+)  # or yolov5n - yolov5x6, custom
 
 # video_path = "./pedestrians.mp4"
-cap = cv2.VideoCapture("/dev/video2")
+cap = cv2.VideoCapture("/dev/video0")
 
 # Loop through the video frames
 while cap.isOpened():
