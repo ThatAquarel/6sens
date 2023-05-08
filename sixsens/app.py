@@ -5,14 +5,13 @@ import numpy as np
 from sixsens.process.audio_player import AudioPlayer
 from sixsens.process.obstruction import Obstruction
 
-from sixsens.model.yolo import YoloNode
+from sixsens.process.yolo import Yolo
 
 
 def run():
     audio_player = AudioPlayer()
     obstruction = Obstruction()
-
-    yolo_node = YoloNode()
+    yolo = Yolo()
 
     cap = cv2.VideoCapture("/dev/video0")
 
@@ -22,6 +21,10 @@ def run():
         success, frame = cap.read()
         if not success:
             break
+
+        if i % 2 == 0:
+            yolo.call(frame)
+            print(yolo.latest())
 
         if i % 5 == 0:
             obstruction.call(frame)
