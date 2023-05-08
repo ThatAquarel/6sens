@@ -10,3 +10,6 @@ class YoloNode(PipelineNode):
     def process(self, frame):
         results = self.model(frame)
         return (results, results.render()[0])
+
+    def render(self, frame):
+        pass
