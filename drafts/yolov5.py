@@ -1,6 +1,8 @@
 import cv2
 import torch
 
+import torchvision.models.detection as det
+
 # Model
 model = torch.hub.load(
     "ultralytics/yolov5", "yolov5n"
