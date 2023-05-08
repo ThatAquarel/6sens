@@ -14,7 +14,7 @@ def run():
 
     yolo_node = YoloNode()
 
-    cap = cv2.VideoCapture("/dev/video2")
+    cap = cv2.VideoCapture("/dev/video0")
 
     i = 0
     past_time = time.time()
@@ -25,8 +25,7 @@ def run():
 
         if i % 5 == 0:
             obstruction.call(frame)
-        if not obstruction.output_queue.empty():
-            print(obstruction.output_queue.get())
+            print(obstruction.latest())
 
         cv2.imshow("6SENS", frame)
 

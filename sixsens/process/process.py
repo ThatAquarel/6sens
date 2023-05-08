@@ -25,5 +25,12 @@ class Process(ABC):
     def call(self, *args, **kwargs):
         raise NotImplementedError()
 
+    latest_data = None
+
+    def latest(self):
+        if not self.output_queue.empty():
+            self.latest_data = self.output_queue.get()
+        return self.latest_data
+
     def stop(self):
         self.process.terminate()
