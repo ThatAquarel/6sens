@@ -14,7 +14,7 @@ def obstruction_process(input_queue, output_queue):
         frame = np.append(frame, np.fliplr(frame).diagonal())
 
         standard_deviations = np.std(frame, axis=0)
-        obstruction = (standard_deviations <= 25).all()
+        obstruction = (standard_deviations <= 35).all()
 
         output_queue.put(obj=obstruction)
 

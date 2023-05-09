@@ -59,6 +59,7 @@ def run():
 
             if speech:
                 speech.play(audio_player)
+        print(obstruction.latest())
 
         i += 1
 
