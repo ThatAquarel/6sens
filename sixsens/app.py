@@ -7,6 +7,8 @@ from sixsens.process.obstruction import Obstruction
 
 from sixsens.process.yolo import Yolo
 
+from sixsens.audio import status
+
 
 def run():
     audio_player = AudioPlayer()
@@ -24,16 +26,28 @@ def run():
 
         if i % 2 == 0:
             yolo.call(frame)
-            print(yolo.latest())
-
         if i % 5 == 0:
             obstruction.call(frame)
-            print(obstruction.latest())
+
+        if latest := yolo.latest():
+            latest.ims = [frame]
+            frame = latest.render()[0]
 
         cv2.imshow("6SENS", frame)
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
             break
+        elif key == ord("s"):
+            speech = None
+            if obstruction.latest():
+                speech = status.VisionObstructed()
+
+            if speech:
+                speech.play(audio_player)
+
+        print(obstruction.latest())
+
         i += 1
 
         if i % 10 == 0:

@@ -1,3 +1,4 @@
+import queue
 import multiprocessing
 
 from abc import ABC, abstractmethod
@@ -9,11 +10,10 @@ class Process(ABC):
             multiprocessing.Queue(),
             multiprocessing.Queue(),
         )
-        self.parent_connection, self.child_connection = multiprocessing.Pipe()
 
         self.process = multiprocessing.Process(
             target=self._get_process_function(),
-            args=(self.child_connection, self.input_queue, self.output_queue),
+            args=(self.input_queue, self.output_queue),
         )
         self.process.start()
 
@@ -28,9 +28,19 @@ class Process(ABC):
     latest_data = None
 
     def latest(self):
-        if not self.output_queue.empty():
-            self.latest_data = self.output_queue.get()
+        try:
+            self.latest_data = self.output_queue.get_nowait()
+        except queue.Empty:
+            pass
+
         return self.latest_data
 
     def stop(self):
         self.process.terminate()
+        while self.process.is_alive():
+            pass
+
+        self.process.join(timeout=1.0)
+
+        self.input_queue.close()
+        self.output_queue.close()

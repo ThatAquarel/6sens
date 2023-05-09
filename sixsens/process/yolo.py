@@ -1,6 +1,7 @@
 import cv2
 import time
 import torch
+import queue
 import numpy as np
 
 from sixsens.process.process import Process
@@ -14,7 +15,7 @@ class Profile:
         self.cuda = cuda
 
 
-def yolo_process(child_connection, input_queue, output_queue):
+def yolo_process(input_queue, output_queue):
     model = torch.hub.load("ultralytics/yolov5", "yolov5n")
 
     while True:
@@ -38,7 +39,7 @@ def yolo_process(child_connection, input_queue, output_queue):
             "shape": results.s,
         }
 
-        output_queue.put(serializable)
+        output_queue.put(obj=serializable)
 
 
 class Yolo(Process):
@@ -55,8 +56,8 @@ class Yolo(Process):
         self.input_queue.put(frame)
 
     def latest(self):
-        if not self.output_queue.empty():
-            serialized = self.output_queue.get()
+        try:
+            serialized = self.output_queue.get_nowait()
 
             self.latest_data = self.results_class(
                 ims=serialized["ims"],
@@ -66,6 +67,8 @@ class Yolo(Process):
                 names=serialized["names"],
                 shape=serialized["shape"],
             )
+        except queue.Empty:
+            pass
 
         return self.latest_data
 

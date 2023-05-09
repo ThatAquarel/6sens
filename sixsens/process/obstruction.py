@@ -3,19 +3,20 @@ import numpy as np
 from sixsens.process.process import Process
 
 
-def obstruction_process(child_connection, input_queue, output_queue):
+def obstruction_process(input_queue, output_queue):
     while True:
         if input_queue.empty():
             continue
 
         frame = input_queue.get()
         frame = np.array(frame)
-        frame = frame.reshape((-1, frame.shape[-1]))
+        frame = frame.diagonal()
+        frame = np.append(frame, np.fliplr(frame).diagonal())
 
         standard_deviations = np.std(frame, axis=0)
-        obstruction = (standard_deviations <= 45).all()
+        obstruction = (standard_deviations <= 25).all()
 
-        output_queue.put(obstruction)
+        output_queue.put(obj=obstruction)
 
 
 class Obstruction(Process):

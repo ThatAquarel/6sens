@@ -4,11 +4,12 @@ from pydub.playback import play
 from sixsens.process.process import Process
 
 
-def audio_process(child_connection, *args):
+def audio_process(input_queue, output_queue):
     while True:
-        serialized_playlist = child_connection.recv()
-        if len(serialized_playlist) < 1:
-            break
+        if input_queue.empty():
+            continue
+
+        serialized_playlist = input_queue.get()
 
         audios = []
         for key, value in serialized_playlist.items():
@@ -25,7 +26,7 @@ def audio_process(child_connection, *args):
 
 class AudioPlayer(Process):
     def call(self, serialized_playlist):
-        self.child_connection.send(serialized_playlist)
+        self.input_queue.put(serialized_playlist)
 
     def _get_process_function(self):
         return audio_process

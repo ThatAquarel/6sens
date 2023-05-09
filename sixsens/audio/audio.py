@@ -9,7 +9,23 @@ from pydub.playback import play
 ROOT_PATH = "/home/tianyi/src/6sens/sixsens/audio/"
 
 
-class DistanceObject(ABC):
+class Audio(ABC):
+    def __init__(self):
+        super().__init__()
+
+    @abstractmethod
+    def _get_audio_file(self):
+        raise NotImplementedError()
+
+    def _load_audio(self):
+        self.serialized_playlist = {self._get_audio_file(): [0, 0]}
+
+    def play(self, audio_player):
+        self._load_audio()
+        audio_player.call(self.serialized_playlist)
+
+
+class DistanceAudio(Audio):
     DISTANCES = {
         "10M": f"{ROOT_PATH}distance/10m.mp3",
         "20M": f"{ROOT_PATH}distance/20m.mp3",
@@ -24,25 +40,17 @@ class DistanceObject(ABC):
         super().__init__()
         self.distance = distance
 
-    @abstractmethod
-    def _get_noun_audio_file(self):
-        raise NotImplementedError()
-
     def _get_distance_audio_file(self):
         return self.DISTANCES[self.distance]
 
     def _load_audio(self):
         self.serialized_playlist = {
-            self._get_noun_audio_file(): [500, -75],
+            self._get_audio_file(): [500, -75],
             self._get_distance_audio_file(): [350, 0],
         }
 
-    def play(self, audio_player):
-        self._load_audio()
-        audio_player.play(self.serialized_playlist)
 
-
-class SpeedObject(DistanceObject):
+class SpeedAudio(DistanceAudio):
     SPEEDS = {
         "NONE": f"{ROOT_PATH}speed/immobile.mp3",
         "SLOW": f"{ROOT_PATH}speed/lente.mp3",
@@ -58,7 +66,7 @@ class SpeedObject(DistanceObject):
 
     def _load_audio(self):
         self.serialized_playlist = {
-            self._get_noun_audio_file(): [500, -75],
+            self._get_audio_file(): [500, -75],
             self._get_speed_audio_file(): [400, 0],
             self._get_distance_audio_file(): [350, 0],
         }
