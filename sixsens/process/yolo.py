@@ -15,18 +15,21 @@ class Profile:
         self.cuda = cuda
 
 
-def yolo_process(input_queue, output_queue):
+def yolo_process(input_queue, output_queue, shared_buffer, frame_shape):
+    buffer = np.frombuffer(shared_buffer.get_obj(), np.uint8)
+    frame = np.empty(frame_shape, np.uint8)
     model = torch.hub.load("ultralytics/yolov5", "yolov5n")
 
     while True:
         if input_queue.empty():
             continue
 
-        frame = input_queue.get()
+        frame_shape_ = input_queue.get()
+        frame[:] = buffer.reshape(frame_shape_)
+
         results = model(frame)
 
         serializable = {
-            "ims": results.ims,
             "pred": results.pred,
             "files": results.files,
             "times": tuple(
@@ -43,8 +46,9 @@ def yolo_process(input_queue, output_queue):
 
 
 class Yolo(Process):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, shared_buffer, frame_shape):
+        self.shared_buffer = shared_buffer
+        super().__init__(self.shared_buffer, frame_shape)
 
         model = torch.hub.load("ultralytics/yolov5", "yolov5n")
         frame = cv2.imread("/home/tianyi/src/6sens/drafts/bus.jpg")
@@ -52,23 +56,21 @@ class Yolo(Process):
 
         self.results_class = type(results)
 
-    def call(self, frame):
-        self.input_queue.put(frame)
+    def call(self, frame_shape):
+        self.input_queue.put(frame_shape)
 
-    def latest(self):
-        try:
-            serialized = self.output_queue.get_nowait()
+    def latest(self, frame):
+        if not self.output_queue.empty():
+            serialized = self.output_queue.get()
 
             self.latest_data = self.results_class(
-                ims=serialized["ims"],
+                ims=[frame],
                 pred=serialized["pred"],
                 files=serialized["files"],
                 times=serialized["times"],
                 names=serialized["names"],
                 shape=serialized["shape"],
             )
-        except queue.Empty:
-            pass
 
         return self.latest_data
 

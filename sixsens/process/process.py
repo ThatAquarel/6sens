@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 
 class Process(ABC):
-    def __init__(self):
+    def __init__(self, *args):
         self.input_queue, self.output_queue = (
             multiprocessing.Queue(),
             multiprocessing.Queue(),
@@ -13,7 +13,7 @@ class Process(ABC):
 
         self.process = multiprocessing.Process(
             target=self._get_process_function(),
-            args=(self.input_queue, self.output_queue),
+            args=(self.input_queue, self.output_queue, *args),
         )
         self.process.start()
 
