@@ -4,19 +4,43 @@ import ctypes
 import multiprocessing
 import numpy as np
 
-from sixsens.process.audio_player import AudioPlayer
 from sixsens.process.obstruction import Obstruction
+from sixsens.process.audio_player import AudioPlayer
 
 from sixsens.process.yolo import Yolo
 
 from sixsens.audio import status
+from sixsens.audio import nouns
+
+
+def get_dist_string(distance_arr):
+    diag = np.min(distance_arr)
+    dist = -2 * diag / 125 + 9
+    dist = np.round(dist / 10)
+
+    if dist == 0:
+        dist_string = "CLOSE"
+    elif dist == 1:
+        dist_string = "10M"
+    elif dist == 2:
+        dist_string = "20M"
+    elif dist == 3:
+        dist_string = "30M"
+    elif dist == 4:
+        dist_string = "40M"
+    elif dist == 5:
+        dist_string = "50M"
+    elif dist >= 6:
+        dist_string = "PERIPHERY"
+
+    return dist_string
 
 
 def run():
     audio_player = AudioPlayer()
-    obstruction = Obstruction()
+    # c = Obstruction()
 
-    cap = cv2.VideoCapture("/dev/video2")
+    cap = cv2.VideoCapture("/dev/video0")
 
     i = 0
 
@@ -41,25 +65,24 @@ def run():
 
         if i % 2 == 0:
             yolo.call(frame.shape)
-        if i % 5 == 0:
-            obstruction.call(frame)
+        # if i % 5 == 0:
+        #     obstruction.call(frame)
 
+        rendered = False
         if latest := yolo.latest(frame):
-            frame = latest.render()[0]
+            rendered_frame = latest.render()[0]
+            rendered = True
 
-        cv2.imshow("6SENS", frame)
+        cv2.imshow("6SENS", rendered_frame if rendered else frame)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
             break
         elif key == ord("s"):
             speech = None
-            if obstruction.latest():
-                speech = status.VisionObstructed()
 
             if speech:
                 speech.play(audio_player)
-        print(obstruction.latest())
 
         i += 1
 
@@ -71,4 +94,3 @@ def run():
     cv2.destroyAllWindows()
 
     audio_player.stop()
-    obstruction.stop()

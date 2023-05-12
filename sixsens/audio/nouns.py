@@ -42,12 +42,14 @@ class People100(DistanceAudio):
 # Transportation
 
 
-class Bus(SpeedAudio):
+class Bus(DistanceAudio):
+    # class Bus(SpeedAudio):
     def _get_audio_file(self):
         return f"{ROOT_PATH}noun/bus.mp3"
 
 
-class Car(SpeedAudio):
+class Car(DistanceAudio):
+    # class Car(SpeedAudio):
     def _get_audio_file(self):
         return f"{ROOT_PATH}noun/voiture.mp3"
 
