@@ -19,6 +19,10 @@ size_t len;
 command cmd;
 uint8_t buf[COLS * ROWS];
 
+const int a = {D0, D1, D2};
+const int r = {D3, D4, D5, D6, D7, D8};
+const int enable = D9;
+
 uint16_t crc16(uint8_t *data_p, size_t length)
 {
   if (length == 0 || data_p == nullptr)
@@ -84,9 +88,18 @@ void ack() {
 
 void setup() {
   Serial.begin(115200);
-  ack();
 
-  pinMode(25, OUTPUT);
+  for (int i = 0; i < 3; i++) {
+    pinMode(a[i], OUTPUT);
+    digitalWrite(a[i], LOW);
+  }
+  for (int i = 0; i < ROWS; i++) {
+    pinMode(r[i], OUTPUT);
+    digitalWrite(r[i], HIGH);
+  }
+
+  pinMode(enable, OUTPUT);
+  digitalWrite(enable, LOW):
 }
 
 void loop() {
@@ -99,9 +112,20 @@ void loop() {
 }
 
 void poll() {
-  if (buf[0] > 0 ){
-    digitalWrite(25, HIGH);
-  } else {
-    digitalWrite(25, LOW);
+  for (int col = 0; col < COLS; col++) {
+    for (int j = 0; j < 3; j++){
+      digitalWrite(a[j], (2 ** j) & (~col));
+    }
+
+    for (int row = 0; row < ROWS; row++) {
+      uint8_t speed = buf[col * COLS + row];
+
+      if (speed > 0) {
+        digitalWrite(r[row], HIGH);
+      } else {
+        digitalWrite(r[row], LOW);
+      }
+    }
+    delay(12);
   }
 }
