@@ -24,7 +24,7 @@ void loop() {
     for (int j = 0; j < 3; j++){
       digitalWrite(a[j], (1 << j) & (~col));
     }
-
+  
     for (int row = 0; row < ROWS; row++) {
       digitalWrite(r[row], LOW);
       delay(50);
