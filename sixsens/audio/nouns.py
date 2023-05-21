@@ -1,4 +1,4 @@
-from sixsens.audio.audio import DistanceAudio, SpeedAudio, ROOT_PATH
+from sixsens.audio.audio import Audio, DistanceAudio, SpeedAudio, ROOT_PATH
 
 
 # People
@@ -64,7 +64,7 @@ class Lights(DistanceAudio):
         return f"{ROOT_PATH}noun/feu_circulation.mp3"
 
 
-class Intersection(DistanceAudio):
+class Intersection(Audio):
     def _get_audio_file(self):
         return f"{ROOT_PATH}noun/intersection.mp3"
 

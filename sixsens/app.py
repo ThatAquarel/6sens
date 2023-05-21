@@ -12,35 +12,14 @@ from sixsens.process.yolo import Yolo
 from sixsens.audio import status
 from sixsens.audio import nouns
 
-
-def get_dist_string(distance_arr):
-    diag = np.min(distance_arr)
-    dist = -2 * diag / 125 + 9
-    dist = np.round(dist / 10)
-
-    if dist == 0:
-        dist_string = "CLOSE"
-    elif dist == 1:
-        dist_string = "10M"
-    elif dist == 2:
-        dist_string = "20M"
-    elif dist == 3:
-        dist_string = "30M"
-    elif dist == 4:
-        dist_string = "40M"
-    elif dist == 5:
-        dist_string = "50M"
-    elif dist >= 6:
-        dist_string = "PERIPHERY"
-
-    return dist_string
+from sixsens.app_reaction_builder import AppReactionBuilder
 
 
 def run():
     audio_player = AudioPlayer()
-    # c = Obstruction()
+    app_reaction_builder = AppReactionBuilder()
 
-    cap = cv2.VideoCapture("/dev/video0")
+    cap = cv2.VideoCapture("/dev/video2")
 
     i = 0
 
@@ -65,23 +44,23 @@ def run():
 
         if i % 2 == 0:
             yolo.call(frame.shape)
-        # if i % 5 == 0:
-        #     obstruction.call(frame)
 
         rendered = False
         if latest := yolo.latest(frame):
             rendered_frame = latest.render()[0]
             rendered = True
 
+            app_reaction_builder.process_predictions(latest)
         cv2.imshow("6SENS", rendered_frame if rendered else frame)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
             break
         elif key == ord("s"):
-            speech = None
+            print("key")
+            speeches = app_reaction_builder.build_reaction()
 
-            if speech:
+            for speech in speeches:
                 speech.play(audio_player)
 
         i += 1

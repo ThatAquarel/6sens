@@ -1,13 +1,44 @@
+import numpy as np
+
 from sixsens.audio import status
 from sixsens.audio import nouns
 
 
 class AppReactionBuilder:
-    def __init__():
+    def __init__(self):
         self.sizes = {}
         self.distances = {}
+        self.centroids = {}
 
-    def process_predictions(pred):
+    def _get_dist_string(self, distance_arr):
+        diag = np.min(distance_arr)
+        dist = -2 * diag / 125 + 9
+        dist = np.round(dist / 10)
+
+        if dist == 0:
+            dist_string = "CLOSE"
+        elif dist == 1:
+            dist_string = "10M"
+        elif dist == 2:
+            dist_string = "20M"
+        elif dist == 3:
+            dist_string = "30M"
+        elif dist == 4:
+            dist_string = "40M"
+        elif dist == 5:
+            dist_string = "50M"
+        elif dist >= 6:
+            dist_string = "PERIPHERY"
+
+        return dist_string
+
+    def process_predictions(self, latest):
+        self.sizes.clear()
+        self.distances.clear()
+        self.centroids.clear()
+
+        pred = latest.pred[0]
+
         for *box, conf, cls in reversed(pred):
             cls = int(cls)
             if not (key := latest.names[cls]) in self.sizes:
@@ -15,10 +46,17 @@ class AppReactionBuilder:
             self.sizes[key].append(
                 np.sqrt((box[0] - box[2]) ** 2 + (box[1] - box[3]) ** 2)
             )
-        for key, value in self.sizes.items():
-            self.distances[key] = get_dist_string(value)
 
-    def build_reaction():
+            if not key in self.centroids:
+                self.centroids[key] = []
+            self.centroids[key].append(
+                [box[0] - box[2] / 2, box[1] - box[3] / 2]
+            )
+
+        for key, value in self.sizes.items():
+            self.distances[key] = self._get_dist_string(value)
+
+    def build_reaction(self):
         speech = []
         noun = False
 
@@ -26,12 +64,12 @@ class AppReactionBuilder:
             return (
                 not len(speech)
                 and object_string in self.sizes
-                and len(sizes[object_string]) >= count
+                and len(self.sizes[object_string]) >= count
             )
 
         if speech_condition("traffic light", 1):
             speech.append(status.Attention())
-            speech.append(status.Intersection())
+            speech.append(nouns.Intersection())
             speech.append(nouns.Lights(self.distances["traffic light"]))
 
         if speech_condition("stop sign", 1):
