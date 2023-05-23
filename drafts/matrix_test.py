@@ -15,17 +15,13 @@ def write(arr):
 
 
 def main(ser):
-    while True:
-        for i in range(7):
-            a = np.zeros(48, dtype=np.uint8)
-            a[i * 6] = 255
-            write(a)
-            time.sleep(0.2)
-        for i in reversed(range(1, 6)):
-            a = np.zeros(48, dtype=np.uint8)
-            a[i * 6] = 255
-            write(a)
-            time.sleep(0.2)
+    for i in range(47):
+        a = np.zeros(48, dtype=np.uint8)
+        a[i] = 255
+
+        write(a)
+        print(i)
+        time.sleep(0.025)
 
 
 if __name__ == "__main__":

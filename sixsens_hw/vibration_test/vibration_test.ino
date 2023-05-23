@@ -24,11 +24,15 @@ void loop() {
     for (int j = 0; j < 3; j++){
       digitalWrite(a[j], (1 << j) & (~col));
     }
+    
+    digitalWrite(r[5], LOW);
+    delay(50);
+    digitalWrite(r[5], HIGH);
   
-    for (int row = 0; row < ROWS; row++) {
-      digitalWrite(r[row], LOW);
-      delay(50);
-      digitalWrite(r[row], HIGH);
-    }
+    // for (int row = 0; row < ROWS; row++) {
+    //   digitalWrite(r[row], LOW);
+    //   delay(50);
+    //   digitalWrite(r[row], HIGH);
+    // }
   }
 }

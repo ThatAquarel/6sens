@@ -37,7 +37,6 @@ void setup() {
   }
   
   pinMode(ENABLE, OUTPUT);
-  digitalWrite(ENABLE, HIGH);
 }
 
 void loop() {
@@ -53,29 +52,33 @@ void loop() {
     pixels.show();
   }
 
+  digitalWrite(ENABLE, HIGH);
   update_matrix();
+  digitalWrite(ENABLE, LOW);
 }
 
 void update_matrix() {
   for (int col = 0; col < N_COLS; col++) {
     int motor_count = 0;
+    for (int row = 0; row < N_ROWS; row++) {
+      int index = col * N_ROWS + row;
+      motor_count += buf[index];
+    }
+
+    if (motor_count < 1) continue;
+
+    for (int i = 0; i < 3; i++){
+      digitalWrite(ADDR[i], (1 << i) & (~col));
+    }
 
     for (int row = 0; row < N_ROWS; row++) {
       int index = col * N_ROWS + row;
 
-      if (buf[index]) {
-        digitalWrite(ROW[row], HIGH);
-        motor_count++;
-      } else {
-        digitalWrite(ROW[row], LOW);
-      }
-    }
+      if (buf[index] == 0) continue;
 
-    if (motor_count) {
-      for (int i = 0; i < 3; i++){
-        digitalWrite(ADDR[i], (1 << i) & (~col));
-      }
-      delay(24);
+      digitalWrite(ROW[row], LOW);
+      delay(50);
+      digitalWrite(ROW[row], HIGH);
     }
   }
 }

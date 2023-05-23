@@ -73,3 +73,4 @@ def run():
     cv2.destroyAllWindows()
 
     audio_player.stop()
+    yolo.stop()
