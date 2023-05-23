@@ -76,10 +76,10 @@ class AppReactionBuilder:
             speech.append(nouns.Stop(self.distances["stop sign"]))
 
         if speech_condition("car", 1):
-            speech.append(nouns.Car(self.distances["car"]))
+            speech.append(nouns.Car(self.distances["car"], "NONE"))
 
         if speech_condition("bus", 1):
-            speech.append(nouns.Car(self.distances["bus"]))
+            speech.append(nouns.Car(self.distances["bus"], "NONE"))
 
         if speech_condition("person", 2):
             ppl_count = np.round(len(self.sizes["person"]) / 10)
