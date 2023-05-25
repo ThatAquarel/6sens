@@ -14,7 +14,7 @@ from sixsens.audio import nouns
 
 from sixsens.reaction.audio_reaction import AudioReaction
 from sixsens.reaction.matrix_reaction import MatrixReaction
-from sixsens.process.serial import Matrix
+from sixsens.process.matrix import Matrix
 
 
 def run():
@@ -23,7 +23,7 @@ def run():
     matrix_reaction = MatrixReaction()
     matrix = Matrix()
 
-    cap = cv2.VideoCapture("/dev/video2")
+    cap = cv2.VideoCapture("/dev/video0")
 
     i = 0
 
@@ -57,6 +57,8 @@ def run():
             audio_reaction.process_predictions(latest)
             matrix_reaction.process_predictions(latest)
         cv2.imshow("6SENS", rendered_frame if rendered else frame)
+
+        matrix = matrix_reaction.build_reaction()
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):

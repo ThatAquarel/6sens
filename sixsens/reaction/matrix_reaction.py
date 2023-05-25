@@ -1,3 +1,5 @@
+import numpy as np
+
 from sixsens.reaction.reaction_builder import ReactionBuilder
 
 
@@ -17,11 +19,12 @@ class MatrixReaction(ReactionBuilder):
 
     def __init__(self):
         self.centroids = {}
-        self.scalar = np.ones(2, np.float)
-        self.matrix = np.zeros((self.ROWS, self.COLS), np.uint8)
+        self.scalar = np.zeros(2, dtype=np.float)
+        self.matrix = np.zeros((self.COLS, self.ROWS), dtype=np.uint8)
 
     def process_predictions(self, latest):
-        self.scalar = np.divide((self.ROWS, self.COLS), (latest.ims[0].shape))
+        self.scalar[:] = [self.COLS, self.ROWS]
+        self.scalar /= latest.ims[0].shape[0:2]
 
         self.centroids.clear()
         pred = latest.pred[0]
@@ -31,7 +34,10 @@ class MatrixReaction(ReactionBuilder):
             if not (key := latest.names[cls]) in self.centroids:
                 self.centroids[key] = []
             self.centroids[key].append(
-                [box[0] - box[2] / 2, box[1] - box[3] / 2]
+                [
+                    (max(box[0], box[2]) - min(box[0], box[2])) / 2,
+                    (max(box[1], box[3]) - min(box[1], box[3])) / 2,
+                ]
             )
 
     def build_reaction(self):
@@ -53,7 +59,9 @@ class MatrixReaction(ReactionBuilder):
         centroids = np.multiply(centroids, self.scalar)
         centroids = np.floor(centroids)
         centroids = np.clip(centroids, [0, 0], [self.ROWS - 1, self.COLS - 1])
+        centroids = centroids.astype(int)
 
         self.matrix[centroids[:, 0], centroids[:, 1]] = 255
         self.matrix[-1, -1] = 0
-        return centroids.flatten()
+
+        return self.matrix.flatten()

@@ -4,6 +4,8 @@ import struct
 
 import numpy as np
 
+from sixsens.process.process import Process
+
 
 PORT = "/dev/ttyACM0"
 BAUD = 115200
@@ -17,7 +19,7 @@ def matrix_process(input_queue, output_queue):
         ser = None
 
     while True:
-        if input_queue.queue():
+        if input_queue.empty():
             continue
 
         serialized_array = input_queue.get()
