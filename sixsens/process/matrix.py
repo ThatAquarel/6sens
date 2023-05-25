@@ -23,8 +23,6 @@ def matrix_process(input_queue, output_queue):
             continue
 
         serialized_array = input_queue.get()
-
-        start_time = time.time()
         try:
             if ser:
                 # while (time.time())

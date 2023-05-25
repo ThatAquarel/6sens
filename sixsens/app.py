@@ -19,9 +19,10 @@ from sixsens.process.matrix import Matrix
 
 def run():
     audio_player = AudioPlayer()
+    matrix = Matrix()
+
     audio_reaction = AudioReaction()
     matrix_reaction = MatrixReaction()
-    matrix = Matrix()
 
     cap = cv2.VideoCapture("/dev/video0")
 
@@ -58,7 +59,8 @@ def run():
             matrix_reaction.process_predictions(latest)
         cv2.imshow("6SENS", rendered_frame if rendered else frame)
 
-        matrix = matrix_reaction.build_reaction()
+        movements = matrix_reaction.build_reaction()
+        matrix.call(movements)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
@@ -72,8 +74,8 @@ def run():
 
         i += 1
 
-        if i % 10 == 0:
-            print(f"Loop time {(time.time() - past_time)/10}")
+        if i % 100 == 0:
+            print(f"Loop time {(time.time() - past_time)/100}")
             past_time = time.time()
 
     cap.release()
