@@ -16,6 +16,8 @@ class Profile:
 
 
 def yolo_process(input_queue, output_queue, shared_buffer, frame_shape):
+    logging.info("Yolo process started")
+
     buffer = np.frombuffer(shared_buffer.get_obj(), np.uint8)
     frame = np.empty(frame_shape, np.uint8)
     model = torch.hub.load("ultralytics/yolov5", "yolov5n")

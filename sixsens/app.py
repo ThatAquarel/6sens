@@ -1,24 +1,22 @@
 import cv2
 import time
 import ctypes
+import logging
 import multiprocessing
 import numpy as np
 
-from sixsens.process.obstruction import Obstruction
 from sixsens.process.audio_player import AudioPlayer
-
+from sixsens.process.obstruction import Obstruction
+from sixsens.process.matrix import Matrix
 from sixsens.process.yolo import Yolo
-
-from sixsens.audio import status
-from sixsens.audio import nouns
 
 from sixsens.reaction.audio_reaction import AudioReaction
 from sixsens.reaction.matrix_reaction import MatrixReaction
-from sixsens.process.matrix import Matrix
 
 
 def run():
     audio_player = AudioPlayer()
+    obstruction = Obstruction()
     matrix = Matrix()
 
     audio_reaction = AudioReaction()
@@ -49,6 +47,8 @@ def run():
 
         if i % 2 == 0:
             yolo.call(frame.shape)
+        if i % 15 == 0:
+            
 
         rendered = False
         if latest := yolo.latest(frame):
@@ -66,7 +66,7 @@ def run():
         if key == ord("q"):
             break
         elif key == ord("s"):
-            print("key")
+            logging.info("Speech triggered")
             speeches = audio_reaction.build_reaction()
 
             for speech in speeches:
@@ -75,7 +75,7 @@ def run():
         i += 1
 
         if i % 100 == 0:
-            print(f"Loop time {(time.time() - past_time)/100}")
+            logging.debug(f"Loop time {(time.time() - past_time)/100}")
             past_time = time.time()
 
     cap.release()

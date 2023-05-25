@@ -1,6 +1,7 @@
 import time
 import serial
 import struct
+import logging
 
 import numpy as np
 
@@ -13,10 +14,13 @@ BAUD = 115200
 
 
 def matrix_process(input_queue, output_queue):
+    logging.info("Matrix process started")
+
     try:
         ser = serial.Serial(PORT, BAUD)
     except serial.SerialException:
         ser = None
+        logging.warning("Failed to connect to serial matrix")
 
     while True:
         if input_queue.empty():
@@ -36,8 +40,8 @@ def matrix_process(input_queue, output_queue):
                 )
                 ser.flush()
         except serial.SerialException:
-            print(f"failed to write to {self.port}")
-        print(f"write {serialized_array.reshape((8, 6)).T}")
+            logging.error(f"Failed to write to {self.port}")
+        logging.debug(f"Write {serialized_array.reshape((8, 6)).T}")
 
 
 class Matrix(Process):

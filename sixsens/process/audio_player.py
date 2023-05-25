@@ -1,4 +1,6 @@
 import time
+import logging
+
 from pydub import AudioSegment
 from pydub.playback import play
 
@@ -6,6 +8,8 @@ from sixsens.process.process import Process
 
 
 def audio_process(input_queue, output_queue):
+    logging.info("AudioPlayer process started")
+
     while True:
         if input_queue.empty():
             continue

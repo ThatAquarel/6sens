@@ -4,6 +4,8 @@ from sixsens.process.process import Process
 
 
 def obstruction_process(input_queue, output_queue):
+    logging.info("Obstruction process started")
+
     while True:
         if input_queue.empty():
             continue
