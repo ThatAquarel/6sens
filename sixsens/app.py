@@ -12,12 +12,16 @@ from sixsens.process.yolo import Yolo
 from sixsens.audio import status
 from sixsens.audio import nouns
 
-from sixsens.app_reaction_builder import AppReactionBuilder
+from sixsens.reaction.audio_reaction import AudioReaction
+from sixsens.reaction.matrix_reaction import MatrixReaction
+from sixsens.process.serial import Matrix
 
 
 def run():
     audio_player = AudioPlayer()
-    app_reaction_builder = AppReactionBuilder()
+    audio_reaction = AudioReaction()
+    matrix_reaction = MatrixReaction()
+    matrix = Matrix()
 
     cap = cv2.VideoCapture("/dev/video2")
 
@@ -50,7 +54,8 @@ def run():
             rendered_frame = latest.render()[0]
             rendered = True
 
-            app_reaction_builder.process_predictions(latest)
+            audio_reaction.process_predictions(latest)
+            matrix_reaction.process_predictions(latest)
         cv2.imshow("6SENS", rendered_frame if rendered else frame)
 
         key = cv2.waitKey(1) & 0xFF
@@ -58,7 +63,7 @@ def run():
             break
         elif key == ord("s"):
             print("key")
-            speeches = app_reaction_builder.build_reaction()
+            speeches = audio_reaction.build_reaction()
 
             for speech in speeches:
                 speech.play(audio_player)

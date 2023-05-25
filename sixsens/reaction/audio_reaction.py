@@ -2,9 +2,10 @@ import numpy as np
 
 from sixsens.audio import status
 from sixsens.audio import nouns
+from sixsens.reaction.reaction_builder import ReactionBuilder
 
 
-class AppReactionBuilder:
+class AudioReaction(ReactionBuilder):
     def __init__(self):
         self.sizes = {}
         self.distances = {}
