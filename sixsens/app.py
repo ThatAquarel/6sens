@@ -13,6 +13,8 @@ from sixsens.process.yolo import Yolo
 from sixsens.reaction.audio_reaction import AudioReaction
 from sixsens.reaction.matrix_reaction import MatrixReaction
 
+from sixsens.audio.status import VisionObstructed
+
 
 def run():
     audio_player = AudioPlayer()
@@ -48,7 +50,7 @@ def run():
         if i % 2 == 0:
             yolo.call(frame.shape)
         if i % 15 == 0:
-            
+            obstruction.call(frame)
 
         rendered = False
         if latest := yolo.latest(frame):
@@ -67,7 +69,10 @@ def run():
             break
         elif key == ord("s"):
             logging.info("Speech triggered")
+
             speeches = audio_reaction.build_reaction()
+            if obstruction.latest():
+                speeches.insert(0, VisionObstructed())
 
             for speech in speeches:
                 speech.play(audio_player)
