@@ -51,7 +51,10 @@ class AudioReaction(ReactionBuilder):
             if not key in self.centroids:
                 self.centroids[key] = []
             self.centroids[key].append(
-                [box[0] - box[2] / 2, box[1] - box[3] / 2]
+                [
+                    (max(box[0], box[2]) - min(box[0], box[2])) / 2,
+                    (max(box[1], box[3]) - min(box[1], box[3])) / 2,
+                ]
             )
 
         for key, value in self.sizes.items():
