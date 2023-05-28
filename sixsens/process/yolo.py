@@ -16,7 +16,9 @@ class Profile:
         self.cuda = cuda
 
 
-def yolo_process(input_queue, output_queue, shared_buffer, frame_shape):
+def yolo_process(
+    stop_event, input_queue, output_queue, shared_buffer, frame_shape
+):
     logging.info("Yolo process started")
 
     buffer = np.frombuffer(shared_buffer.get_obj(), np.uint8)
@@ -24,6 +26,10 @@ def yolo_process(input_queue, output_queue, shared_buffer, frame_shape):
     model = torch.hub.load("ultralytics/yolov5", "yolov5n")
 
     while True:
+        if stop_event.is_set():
+            logging.info("Yolo process stopped")
+            break
+
         if input_queue.empty():
             continue
 

@@ -13,7 +13,7 @@ BAUD = 115200
 # ON_TIME = 2
 
 
-def matrix_process(input_queue, output_queue):
+def matrix_process(stop_event, input_queue, output_queue):
     logging.info("Matrix process started")
 
     try:
@@ -24,6 +24,10 @@ def matrix_process(input_queue, output_queue):
         logging.warning("Failed to connect to serial matrix")
 
     while True:
+        if stop_event.is_set():
+            logging.info("Matrix process stopped")
+            break
+
         if input_queue.empty():
             continue
 

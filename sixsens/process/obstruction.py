@@ -4,10 +4,14 @@ import numpy as np
 from sixsens.process.process import Process
 
 
-def obstruction_process(input_queue, output_queue):
+def obstruction_process(stop_event, input_queue, output_queue):
     logging.info("Obstruction process started")
 
     while True:
+        if stop_event.is_set():
+            logging.info("Obstruction process stopped")
+            break
+
         if input_queue.empty():
             continue
 

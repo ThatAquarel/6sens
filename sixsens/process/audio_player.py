@@ -7,10 +7,14 @@ from pydub.playback import play
 from sixsens.process.process import Process
 
 
-def audio_process(input_queue, output_queue):
+def audio_process(stop_event, input_queue, output_queue):
     logging.info("AudioPlayer process started")
 
     while True:
+        if stop_event.is_set():
+            logging.info("AudioPlayer process stopped")
+            break
+
         if input_queue.empty():
             continue
 

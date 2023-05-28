@@ -88,4 +88,6 @@ def run():
     cv2.destroyAllWindows()
 
     audio_player.stop()
+    obstruction.stop()
+    matrix.stop()
     yolo.stop()
