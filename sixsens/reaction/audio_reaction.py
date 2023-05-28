@@ -11,24 +11,23 @@ class AudioReaction(ReactionBuilder):
         self.distances = {}
         self.centroids = {}
 
-    def _get_dist_string(self, distance_arr):
-        diag = np.min(distance_arr)
-        dist = -2 * diag / 125 + 9
-        dist = np.round(dist / 10)
+    def _get_dist_string(self, distance_arr, frame_diag):
+        obj_diag = np.min(distance_arr)
+        percentage = obj_diag / frame_diag
 
-        if dist == 0:
+        if percentage >= 0.25:
             dist_string = "CLOSE"
-        elif dist == 1:
+        elif percentage >= 0.125:
             dist_string = "10M"
-        elif dist == 2:
+        elif percentage >= 0.0625:
             dist_string = "20M"
-        elif dist == 3:
+        elif percentage >= 0.05:
             dist_string = "30M"
-        elif dist == 4:
+        elif percentage >= 0.04:
             dist_string = "40M"
-        elif dist == 5:
+        elif percentage >= 0.03:
             dist_string = "50M"
-        elif dist >= 6:
+        else:
             dist_string = "PERIPHERY"
 
         return dist_string
@@ -57,8 +56,10 @@ class AudioReaction(ReactionBuilder):
                 ]
             )
 
+        frame_size = latest.ims[0].shape
+        frame_diag = np.sqrt(frame_size[0] ** 2 + frame_size[1] ** 2)
         for key, value in self.sizes.items():
-            self.distances[key] = self._get_dist_string(value)
+            self.distances[key] = self._get_dist_string(value, frame_diag)
 
     def build_reaction(self):
         speech = []
