@@ -85,22 +85,25 @@ class AudioReaction(ReactionBuilder):
         if speech_condition("bus", 1):
             speech.append(nouns.Car(self.distances["bus"], "NONE"))
 
-        if speech_condition("person", 2):
-            ppl_count = np.round(len(self.sizes["person"]) / 10)
+        if speech_condition("person", 1):
+            ppl_count = len(self.sizes["person"])
+            rounded_ppl_count = np.round(ppl_count / 10)
             if ppl_count == 1:
+                ppl_class = nouns.People0
+            elif rounded_ppl_count == 1:
                 ppl_class = nouns.People10
-            elif ppl_count == 2:
+            elif rounded_ppl_count == 2:
                 ppl_class = nouns.People20
-            elif ppl_count == 3:
+            elif rounded_ppl_count == 3:
                 ppl_class = nouns.People30
-            elif ppl_count == 4:
+            elif rounded_ppl_count == 4:
                 ppl_class = nouns.People40
-            elif ppl_count == 5:
+            elif rounded_ppl_count == 5:
                 ppl_class = nouns.People50
-            elif ppl_count >= 6:
+            elif rounded_ppl_count >= 6:
                 ppl_class = nouns.People100
             else:
-                ppl_class = nouns.People0
+                ppl_class = nouns.People1
             speech.append(ppl_class(self.distances["person"]))
 
         if speech_condition("chair", 1):

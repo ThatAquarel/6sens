@@ -9,6 +9,11 @@ class People0(DistanceAudio):
         return f"{ROOT_PATH}noun/0_pers.mp3"
 
 
+class People1(DistanceAudio):
+    def _get_audio_file(self):
+        return f"{ROOT_PATH}noun/1_pers.mp3"
+
+
 class People10(DistanceAudio):
     def _get_audio_file(self):
         return f"{ROOT_PATH}noun/10_pers.mp3"
