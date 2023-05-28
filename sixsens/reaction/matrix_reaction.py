@@ -17,15 +17,18 @@ class MatrixReaction(ReactionBuilder):
     ROWS = 6
     COLS = 8
 
+    CROP_0 = (860, 75)
+    CROP_1 = (1845, 1005)
+
     def __init__(self):
         self.centroids = {}
-        self.scalar = np.zeros(2, dtype=np.float)
+        self.scalar = np.divide(
+            [self.COLS, self.ROWS], np.subtract(self.CROP_1, self.CROP_0)
+        )
+
         self.matrix = np.zeros((self.COLS, self.ROWS), dtype=np.uint8)
 
     def process_predictions(self, latest):
-        self.scalar[:] = [self.COLS, self.ROWS]
-        self.scalar /= latest.ims[0].shape[0:-1][::-1]
-
         self.centroids.clear()
         pred = latest.pred[0]
 
@@ -55,7 +58,10 @@ class MatrixReaction(ReactionBuilder):
         if not selected_centroids:
             return self.matrix.flatten()
 
-        centroids = selected_centroids
+        centroids = np.array(selected_centroids)
+
+        centroids[:, 0] -= self.CROP_0[0]
+        centroids[:, 1] -= self.CROP_0[1]
 
         centroids = np.multiply(centroids, self.scalar)
         centroids = np.floor(centroids)
@@ -65,5 +71,6 @@ class MatrixReaction(ReactionBuilder):
 
         self.matrix[centroids[:, 0], centroids[:, 1]] = 255
         self.matrix[:, -1] = 0
+        self.matrix = self.matrix[::-1]
 
         return self.matrix.flatten()
