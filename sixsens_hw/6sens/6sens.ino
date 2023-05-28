@@ -24,9 +24,6 @@ void setup() {
   pinMode(LED_POWER, OUTPUT);
   digitalWrite(LED_POWER, HIGH);
 
-  pixels.setPixelColor(0, pixels.Color(0, 80, 0));
-  pixels.show();
-
   for (int i = 0; i < 3; i++) {
     pinMode(ADDR[i], OUTPUT);
     digitalWrite(ADDR[i], HIGH);
@@ -40,6 +37,9 @@ void setup() {
 }
 
 void loop() {
+  pixels.setPixelColor(0, pixels.Color(0, 255, 0));
+  pixels.show();
+
   while (!Serial.available()) delay(1);
 
   uint8_t flag = 0;
@@ -66,6 +66,9 @@ void update_matrix() {
     }
 
     if (motor_count < 1) continue;
+
+    pixels.setPixelColor(0, pixels.Color(0, 128, 255));
+    pixels.show();
 
     for (int i = 0; i < 3; i++){
       digitalWrite(ADDR[i], (1 << i) & (~col));
