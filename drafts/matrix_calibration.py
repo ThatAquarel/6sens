@@ -14,13 +14,17 @@ def write(arr):
     ser.flush()
 
 
-def main(ser):
-    for i in range(47):
-        a = np.zeros(48, dtype=np.uint8)
-        a[i] = 255
+ROWS = 6
+COLS = 8
 
+
+def main(ser):
+    matrix = np.zeros((COLS, ROWS), dtype=np.uint8)
+    matrix[4, 4] = 255
+
+    while True:
+        a = matrix.flatten()
         write(a)
-        print(a)
         time.sleep(0.025)
 
 
