@@ -6,7 +6,6 @@ import multiprocessing
 import numpy as np
 
 from sixsens.process.audio_player import AudioPlayer
-from sixsens.process.obstruction import Obstruction
 from sixsens.process.matrix import Matrix
 from sixsens.process.yolo import Yolo
 
@@ -18,7 +17,6 @@ from sixsens.audio.status import VisionObstructed
 
 def run():
     audio_player = AudioPlayer()
-    obstruction = Obstruction()
     matrix = Matrix()
 
     audio_reaction = AudioReaction()
@@ -49,8 +47,6 @@ def run():
 
         if i % 2 == 0:
             yolo.call(frame.shape)
-        if i % 15 == 0:
-            obstruction.call(frame)
 
         rendered = False
         if latest := yolo.latest(frame):
@@ -78,8 +74,6 @@ def run():
             logging.info("Speech triggered")
 
             speeches = audio_reaction.build_reaction()
-            # if obstruction.latest():
-            #     speeches.insert(0, VisionObstructed())
 
             for speech in speeches:
                 speech.play(audio_player)
@@ -94,6 +88,5 @@ def run():
     cv2.destroyAllWindows()
 
     audio_player.stop()
-    obstruction.stop()
     matrix.stop()
     yolo.stop()
