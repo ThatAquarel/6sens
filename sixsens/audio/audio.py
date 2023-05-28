@@ -27,13 +27,13 @@ class Audio(ABC):
 
 class DistanceAudio(Audio):
     DISTANCES = {
-        "10M": f"{ROOT_PATH}distance/10m.mp3",
-        "20M": f"{ROOT_PATH}distance/20m.mp3",
-        "30M": f"{ROOT_PATH}distance/30m.mp3",
-        "40M": f"{ROOT_PATH}distance/40m.mp3",
-        "50M": f"{ROOT_PATH}distance/50m.mp3",
-        "PERIPHERY": f"{ROOT_PATH}distance/en_peripherie.mp3",
-        "CLOSE": f"{ROOT_PATH}distance/tres_proche.mp3",
+        "10M": f"{ROOT_PATH}distance/10m.wav",
+        "20M": f"{ROOT_PATH}distance/20m.wav",
+        "30M": f"{ROOT_PATH}distance/30m.wav",
+        "40M": f"{ROOT_PATH}distance/40m.wav",
+        "50M": f"{ROOT_PATH}distance/50m.wav",
+        "PERIPHERY": f"{ROOT_PATH}distance/en_peripherie.wav",
+        "CLOSE": f"{ROOT_PATH}distance/tres_proche.wav",
     }
 
     def __init__(self, distance):
@@ -52,9 +52,9 @@ class DistanceAudio(Audio):
 
 class SpeedAudio(DistanceAudio):
     SPEEDS = {
-        "NONE": f"{ROOT_PATH}speed/immobile.mp3",
-        "SLOW": f"{ROOT_PATH}speed/lente.mp3",
-        "FAST": f"{ROOT_PATH}speed/exces_vitesse.mp3",
+        "NONE": f"{ROOT_PATH}speed/immobile.wav",
+        "SLOW": f"{ROOT_PATH}speed/lente.wav",
+        "FAST": f"{ROOT_PATH}speed/exces_vitesse.wav",
     }
 
     def __init__(self, distance, speed):
