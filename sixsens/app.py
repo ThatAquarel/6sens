@@ -30,6 +30,7 @@ def run():
     buffer = None
     yolo = None
 
+    matrix_call = False
     auto_speech = False
     auto_speech_debounce = i
 
@@ -53,6 +54,8 @@ def run():
 
         if auto_speech:
             frame[0:15, 0:15] = [0, 0, 255]
+        if matrix_call:
+            frame[0:15, 15:30] = [0, 255, 0]
 
         rendered = False
         if latest := yolo.latest(frame):
@@ -73,9 +76,14 @@ def run():
         movements = matrix_reaction.build_reaction()
         if np.add.reduce(movements):
             matrix.call(movements)
+            matrix_call = True
+        else:
+            matrix_call = False
 
         def trigger_speech():
-            logging.info(f"Speech triggered {'automatically' if auto_speech else ''}")
+            logging.info(
+                f"Speech triggered {'automatically' if auto_speech else ''}"
+            )
 
             speeches = audio_reaction.build_reaction()
 
@@ -91,6 +99,9 @@ def run():
             auto_speech_debounce = i
             auto_speech = not auto_speech
             logging.info(f"Auto speech: {auto_speech}")
+        elif key == ord("r"):
+            logging.info(f"Matrix reset")
+            matrix.call(np.zeros(48, dtype=np.uint8))
 
         if auto_speech and i % 75 == 0 and audio_player.input_queue.empty():
             trigger_speech()
