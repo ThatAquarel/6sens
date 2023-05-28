@@ -30,6 +30,9 @@ def run():
     buffer = None
     yolo = None
 
+    auto_speech = False
+    auto_speech_debounce = i
+
     past_time = time.time()
     while cap.isOpened():
         success, frame = cap.read()
@@ -50,6 +53,7 @@ def run():
 
         rendered = False
         if latest := yolo.latest(frame):
+            latest.ims[0] = frame
             rendered_frame = latest.render()[0]
             rendered = True
 
@@ -67,16 +71,24 @@ def run():
         if np.add.reduce(movements):
             matrix.call(movements)
 
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
-        elif key == ord("s"):
+        def trigger_speech():
             logging.info("Speech triggered")
 
             speeches = audio_reaction.build_reaction()
 
             for speech in speeches:
                 speech.play(audio_player)
+
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+        elif key == ord("s"):
+            trigger_speech()
+        elif key == ord("a") and (i - auto_speech_debounce) > 5:
+            auto_speech_debounce = i
+            auto_speech = not auto_speech
+
+        # if i > 300 and i % 150 == 0:
 
         i += 1
 
