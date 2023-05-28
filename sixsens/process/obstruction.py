@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 
 from sixsens.process.process import Process

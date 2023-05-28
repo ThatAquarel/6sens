@@ -18,6 +18,7 @@ def matrix_process(input_queue, output_queue):
 
     try:
         ser = serial.Serial(PORT, BAUD)
+        logging.info("Matrix connected")
     except serial.SerialException:
         ser = None
         logging.warning("Failed to connect to serial matrix")
@@ -27,9 +28,11 @@ def matrix_process(input_queue, output_queue):
             continue
 
         serialized_array = input_queue.get()
+        serialized_array[-1] = 0
+        serialized_array = serialized_array.astype(np.uint8)
+
         try:
             if ser:
-                # while (time.time())
                 ser.write(
                     struct.pack(
                         f"<{'x' * 4}B{len(serialized_array)}sB{'x' * 4}",
@@ -40,8 +43,7 @@ def matrix_process(input_queue, output_queue):
                 )
                 ser.flush()
         except serial.SerialException:
-            logging.error(f"Failed to write to {self.port}")
-        logging.debug(f"Write {serialized_array.reshape((8, 6)).T}")
+            logging.error(f"Failed to write to {PORT}")
 
 
 class Matrix(Process):

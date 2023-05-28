@@ -62,7 +62,8 @@ def run():
         cv2.imshow("6SENS", rendered_frame if rendered else frame)
 
         movements = matrix_reaction.build_reaction()
-        matrix.call(movements)
+        if np.add.reduce(movements):
+            matrix.call(movements)
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
@@ -71,8 +72,8 @@ def run():
             logging.info("Speech triggered")
 
             speeches = audio_reaction.build_reaction()
-            if obstruction.latest():
-                speeches.insert(0, VisionObstructed())
+            # if obstruction.latest():
+            #     speeches.insert(0, VisionObstructed())
 
             for speech in speeches:
                 speech.play(audio_player)
