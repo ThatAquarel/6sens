@@ -107,9 +107,9 @@ class AudioReaction(ReactionBuilder):
             speech.append(ppl_class(self.distances["person"]))
 
         if speech_condition("chair", 1):
-            speech.append(nouns.Car(self.distances["chair"]))
+            speech.append(nouns.Chair(self.distances["chair"]))
 
         if speech_condition("table", 1):
-            speech.append(nouns.Car(self.distances["table"]))
+            speech.append(nouns.Table(self.distances["table"]))
 
         return speech
