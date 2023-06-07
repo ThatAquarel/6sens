@@ -1,3 +1,4 @@
 env/
 sixsens.egg-info/
 __pycache__/
+banner*
