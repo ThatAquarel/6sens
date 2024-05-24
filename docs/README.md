@@ -16,8 +16,6 @@
 
 ## Le projet
 
-<img src="https://raw.githubusercontent.com/ThatAquarel/6sens/main/media/logo_unflip.png" width="256px">
-
 Le Sixième sens (6sens®) est une compagnie qui se focalise sur les personnes ayant des troubles de la vision nécessitant des besoins particuliers. C’est une minorité sous-représentée dans le monde, soit 284 millions de personnes selon l’Organisation de la santé dans le monde. Ceux-ci font face à de nombreuses difficultés en termes de navigation géographique, selon l’Organisation des infrastructures publiques ainsi que des difficultés à percevoir des obstacles approchant d’une distance (Glenk, et al. 2019). Malgré les avancées technologiques, les principales solutions offertes à leur disposition sont les cannes (utilisées 98% du temps) et les chiens accompagnateurs (utilisés 2% du temps) (Spinsante, et al. 2022). Cependant, ceux-ci ont leurs limitations en termes d’efficacité.
 
 Notre premier modèle, le Sixième sens 6.1, est un étui pour téléphone qui aide les personnes non voyantes à naviguer et à s’orienter, et ce, en les aidant à localiser les objets dans un espace spatio-temporel. Par conséquent, il vise à remplacer ou à complémenter l’utilisation de la canne et du chien en s’appuyant sur leurs faiblesses.

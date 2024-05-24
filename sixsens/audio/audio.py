@@ -6,7 +6,8 @@ from pydub import AudioSegment
 from pydub.playback import play
 
 
-ROOT_PATH = "/home/tianyi/src/6sens/sixsens/audio/"
+# ROOT_PATH = "/home/tianyi/src/6sens/sixsens/audio/"
+ROOT_PATH = "C:\\Users\\xia_t\\Desktop\\Projects\\6thsense\\sixsens\\audio\\"
 
 
 class Audio(ABC):

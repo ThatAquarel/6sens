@@ -22,7 +22,7 @@ def run():
     audio_reaction = AudioReaction()
     matrix_reaction = MatrixReaction()
 
-    cap = cv2.VideoCapture("/dev/video2")
+    cap = cv2.VideoCapture(0)
 
     i = 0
 
@@ -66,11 +66,11 @@ def run():
             audio_reaction.process_predictions(latest)
             matrix_reaction.process_predictions(latest)
 
-        cv2.namedWindow("6SENS", cv2.WINDOW_NORMAL)
-        cv2.moveWindow("6SENS", 1920, 0)
-        cv2.setWindowProperty(
-            "6SENS", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN
-        )
+        # cv2.namedWindow("6SENS", cv2.WINDOW_NORMAL)
+        # cv2.moveWindow("6SENS", 1920, 0)
+        # cv2.setWindowProperty(
+        #     "6SENS", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN
+        # )
         cv2.imshow("6SENS", rendered_frame if rendered else frame)
 
         movements = matrix_reaction.build_reaction()

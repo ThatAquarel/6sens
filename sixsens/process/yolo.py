@@ -60,7 +60,7 @@ class Yolo(Process):
         super().__init__(self.shared_buffer, frame_shape)
 
         model = torch.hub.load("ultralytics/yolov5", "yolov5n")
-        frame = cv2.imread("/home/tianyi/src/6sens/drafts/bus.jpg")
+        frame = cv2.imread("C:\\Users\\xia_t\\Desktop\\Projects\\6thsense\\drafts\\bus.jpg")
         results = model(frame)
 
         self.results_class = type(results)
