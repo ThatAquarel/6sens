@@ -10,6 +10,10 @@
 
 <sup>1</sup>Collège Jean de la Mennais, secondaire 4
 
+## Une démonstration
+
+[![Démonstration du projet](https://img.youtube.com/vi/_et0clgrfNw/maxresdefault.jpg)](https://youtu.be/_et0clgrfNw)
+
 ## Le projet
 
 <img src="https://raw.githubusercontent.com/ThatAquarel/6sens/main/media/logo_unflip.png" width="256px">
