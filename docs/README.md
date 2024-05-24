@@ -10,7 +10,12 @@
 
 <sup>1</sup>Collège Jean de la Mennais, secondaire 4
 
-## Une démonstration
+## Une démonstration vidéo
+
+- À 0min 0s - Description du projet
+- À 0min 29s - Détection des obstacles avec l'intelligence artificielle
+- À 0min 49s - Conception
+- À 1min 9s - Assemblage
 
 [![Démonstration du projet](https://img.youtube.com/vi/_et0clgrfNw/maxresdefault.jpg)](https://youtu.be/_et0clgrfNw)
 
